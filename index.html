@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16281f">
+  <meta name="description" content="Офлайн-конструктор карточек для покупки и продажи скота, мяса и молочной продукции.">
+  <title>Mal Cards — карточки для животноводства</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#composer">Перейти к конструктору</a>
+
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="#composer" aria-label="Mal Cards — на главную">
+        <span class="brand__mark" aria-hidden="true">M</span>
+        <span>
+          <strong>Mal Cards</strong>
+          <small>Сделки с животноводством — понятно</small>
+        </span>
+      </a>
+
+      <div class="header-actions">
+        <span class="offline-badge"><i aria-hidden="true"></i> Работает офлайн</span>
+        <button class="button button--quiet button--compact" id="open-library" type="button">
+          <span aria-hidden="true">▤</span>
+          Сохранённые
+          <span class="count-badge" id="saved-count">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__copy">
+          <p class="eyebrow"><span></span> Карточка за пару минут</p>
+          <h1 id="page-title">Соберите предложение,<br><em>которое легко понять.</em></h1>
+          <p>Выберите сторону сделки и категорию. Поля подстроятся сами, а готовая карточка останется на этом устройстве.</p>
+        </div>
+
+        <div class="hero__stats" aria-label="Возможности сервиса">
+          <div><strong>3</strong><span>категории</span></div>
+          <div><strong>100%</strong><span>локально</span></div>
+          <div><strong>0</strong><span>регистраций</span></div>
+        </div>
+      </section>
+
+      <section class="composer-section" id="composer" aria-labelledby="composer-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-index">01 / КОНСТРУКТОР</p>
+            <h2 id="composer-title">Кто вы в этой сделке?</h2>
+          </div>
+          <p class="autosave-status" id="autosave-status" role="status">Черновик сохраняется автоматически</p>
+        </div>
+
+        <div class="choice-bar" aria-label="Сторона сделки">
+          <button class="choice-card is-active" type="button" data-role="seller" aria-pressed="true">
+            <span class="choice-card__icon choice-card__icon--seller" aria-hidden="true">↗</span>
+            <span><strong>Продавец</strong><small>Предлагаю товар</small></span>
+            <i aria-hidden="true">✓</i>
+          </button>
+          <button class="choice-card" type="button" data-role="client" aria-pressed="false">
+            <span class="choice-card__icon choice-card__icon--client" aria-hidden="true">⌕</span>
+            <span><strong>Клиент</strong><small>Ищу и покупаю</small></span>
+            <i aria-hidden="true">✓</i>
+          </button>
+        </div>
+
+        <div class="category-row" role="group" aria-label="Категория товара">
+          <span class="category-row__label">Категория</span>
+          <button class="category-button is-active" type="button" data-category="livestock" aria-pressed="true">
+            <span aria-hidden="true">♞</span> Живой скот
+          </button>
+          <button class="category-button" type="button" data-category="meat" aria-pressed="false">
+            <span aria-hidden="true">◇</span> Мясо
+          </button>
+          <button class="category-button" type="button" data-category="dairy" aria-pressed="false">
+            <span aria-hidden="true">◒</span> Молочная продукция
+          </button>
+        </div>
+
+        <div class="workspace">
+          <form class="form-panel" id="card-form" novalidate>
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker" id="form-kicker">Карточка продавца</span>
+                <h3 id="form-title">Живой скот</h3>
+              </div>
+              <button class="text-button" id="reset-form" type="button">Очистить</button>
+            </div>
+
+            <div id="dynamic-form" class="form-content"></div>
+
+            <fieldset class="form-section">
+              <legend>Контакт и локация</legend>
+              <div class="field-grid field-grid--two">
+                <label class="field">
+                  <span>Имя или хозяйство <b>*</b></span>
+                  <input id="contactName" data-field="contactName" type="text" autocomplete="name" placeholder="Например, КХ Береке" required>
+                  <small class="field-error" data-error-for="contactName"></small>
+                </label>
+                <label class="field">
+                  <span>Телефон / WhatsApp</span>
+                  <input id="phone" data-field="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 700 000 00 00">
+                </label>
+              </div>
+              <label class="field">
+                <span>Город или район <b>*</b></span>
+                <input id="location" data-field="location" type="text" autocomplete="address-level2" placeholder="Шымкент, Абайский район" required>
+                <small class="field-error" data-error-for="location"></small>
+              </label>
+              <label class="field">
+                <span>Комментарий</span>
+                <textarea id="notes" data-field="notes" rows="3" maxlength="280" placeholder="Порода, условия сделки, удобное время для связи…"></textarea>
+                <small class="character-count"><span id="notes-count">0</span>/280</small>
+              </label>
+            </fieldset>
+
+            <div class="form-actions">
+              <button class="button button--primary" id="save-card" type="submit">
+                <span aria-hidden="true">＋</span> Сохранить карточку
+              </button>
+              <button class="button button--secondary" id="copy-card" type="button">
+                Копировать текст
+              </button>
+            </div>
+          </form>
+
+          <aside class="preview-panel" aria-labelledby="preview-title">
+            <div class="panel-heading panel-heading--preview">
+              <div>
+                <span class="panel-kicker">Живое превью</span>
+                <h3 id="preview-title">Так увидят карточку</h3>
+              </div>
+              <span class="live-dot"><i aria-hidden="true"></i> LIVE</span>
+            </div>
+
+            <article class="market-card market-card--livestock" id="preview-card" aria-live="polite">
+              <div class="market-card__topline">
+                <span class="role-label" id="preview-role">ПРОДАВЕЦ</span>
+                <span class="card-number" id="preview-number">#MC-0001</span>
+              </div>
+              <div class="market-card__hero">
+                <span class="category-symbol" id="preview-symbol" aria-hidden="true">♞</span>
+                <div>
+                  <p id="preview-intent">ПРЕДЛАГАЕТСЯ</p>
+                  <h4 id="preview-card-title">КРС · Бычок</h4>
+                </div>
+              </div>
+              <p class="market-card__description" id="preview-description">Заполните поля слева — описание соберётся автоматически.</p>
+              <div class="metric-grid" id="preview-metrics"></div>
+              <div class="chip-list" id="preview-chips"></div>
+              <div class="contact-strip">
+                <div>
+                  <span>КОНТАКТ</span>
+                  <strong id="preview-contact">Имя или хозяйство</strong>
+                </div>
+                <div>
+                  <span>ЛОКАЦИЯ</span>
+                  <strong id="preview-location">Город или район</strong>
+                </div>
+                <span class="contact-strip__arrow" aria-hidden="true">↗</span>
+              </div>
+              <footer>
+                <span>Создано в Mal Cards</span>
+                <span>Хранится только на вашем устройстве</span>
+              </footer>
+            </article>
+
+            <div class="preview-actions">
+              <button class="button button--secondary" id="share-card" type="button">Поделиться</button>
+              <p>Данные не отправляются в интернет</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="library-section" id="library" aria-labelledby="library-title">
+        <div class="section-heading section-heading--library">
+          <div>
+            <p class="section-index">02 / ВАША БАЗА</p>
+            <h2 id="library-title">Сохранённые и история</h2>
+          </div>
+          <button class="text-button text-button--danger" id="clear-library" type="button">Очистить всё</button>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Локальная база карточек">
+          <button class="tab is-active" id="saved-tab" type="button" role="tab" aria-selected="true" aria-controls="saved-panel" data-tab="saved">
+            Сохранённые <span id="saved-tab-count">0</span>
+          </button>
+          <button class="tab" id="history-tab" type="button" role="tab" aria-selected="false" aria-controls="history-panel" data-tab="history">
+            История <span id="history-tab-count">0</span>
+          </button>
+        </div>
+
+        <div class="tab-panel is-active" id="saved-panel" role="tabpanel" aria-labelledby="saved-tab">
+          <div class="library-grid" id="saved-list"></div>
+        </div>
+        <div class="tab-panel" id="history-panel" role="tabpanel" aria-labelledby="history-tab" hidden>
+          <div class="library-grid" id="history-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Mal Cards</span>
+      <p>Локальный инструмент для быстрых и понятных сделок.</p>
+      <span>v2.0</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <template id="empty-state-template">
+    <div class="empty-state">
+      <span aria-hidden="true">◇</span>
+      <h3></h3>
+      <p></p>
+      <button class="button button--secondary" type="button">Создать карточку</button>
+    </div>
+  </template>
+</body>
+</html>
